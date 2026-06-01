@@ -34,9 +34,11 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     padding: 24,
+    width: "100%",
+    backgroundColor: "#FFF",
   },
   containerDone: {
-    opacity: 0.5,
+    opacity: 0.8,
   },
   paragraph: {
     marginBottom: 16,
