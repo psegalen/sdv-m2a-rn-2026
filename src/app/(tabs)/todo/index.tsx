@@ -1,11 +1,13 @@
 import Button from "@/components/Button";
 import TodoItem from "@/components/TodoItem";
+import { TodoContext } from "@/data/TodoContext";
 import { Stack, useRouter } from "expo-router";
+import { useContext } from "react";
 import { Platform, ScrollView, StyleSheet } from "react-native";
-import { todoItems } from "../../../data/TodoMock";
 
 export default function Index() {
   const router = useRouter();
+  const { todoList } = useContext(TodoContext);
   return (
     <ScrollView
       style={styles.container}
@@ -22,7 +24,7 @@ export default function Index() {
           ),
         }}
       />
-      {todoItems.map((todo) => (
+      {todoList.map((todo) => (
         <TodoItem
           key={todo.id}
           title={todo.title}
@@ -30,7 +32,7 @@ export default function Index() {
           onPress={() =>
             router.push({
               pathname: "/(tabs)/todo/edit",
-              params: { title: todo.title, done: todo.done.toString() },
+              params: { todoId: todo.id },
             })
           }
         />

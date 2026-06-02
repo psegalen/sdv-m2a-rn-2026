@@ -1,14 +1,29 @@
-import { TodoDataItem } from "@/data/TodoMock";
+import { TodoContext } from "@/data/TodoContext";
 import globalStyles from "@/style/globalStyles";
+import { useRouter } from "expo-router";
+import { useContext, useState } from "react";
 import { StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import Button from "./Button";
 
 interface TodoEditProps {
   creation: boolean;
-  todo?: TodoDataItem;
+  todoId?: string;
 }
 
-const TodoEdit = ({ creation, todo }: TodoEditProps) => {
+const TodoEdit = ({ creation, todoId }: TodoEditProps) => {
+  const router = useRouter();
+  const { todoList, createTodo, updateTodo } = useContext(TodoContext);
+  const todo = creation ? null : todoList.find((item) => item.id === todoId);
+  const [newTitle, setNewTitle] = useState(todo ? todo.title : "");
+  const [newDone, setNewDone] = useState(todo ? todo.done : false);
+  const onPress = () => {
+    if (creation) {
+      createTodo(newTitle);
+    } else {
+      updateTodo({ ...todo!, title: newTitle, done: newDone });
+    }
+    router.back();
+  };
   return (
     <View style={styles.container}>
       <Text style={globalStyles.title}>
@@ -17,13 +32,17 @@ const TodoEdit = ({ creation, todo }: TodoEditProps) => {
       <TextInput
         style={styles.input}
         placeholder="Tâche à faire"
-        value={todo ? todo.title : ""}
+        onChangeText={(newText) => setNewTitle(newText)}
+        value={newTitle}
       />
       <View style={styles.switchContainer}>
-        <Switch value={todo ? todo.done : false} />
+        <Switch
+          value={newDone}
+          onValueChange={(newValue) => setNewDone(newValue)}
+        />
         <Text>Fait ?</Text>
       </View>
-      <Button title={creation ? "Créer" : "Modifier"} />
+      <Button title={creation ? "Créer" : "Modifier"} onPress={onPress} />
     </View>
   );
 };
