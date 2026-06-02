@@ -1,28 +1,37 @@
 import Button from "@/components/Button";
-import TodoEdit from "@/components/TodoEdit";
 import TodoItem from "@/components/TodoItem";
-import { useState } from "react";
+import { Stack, useRouter } from "expo-router";
 import { Platform, ScrollView, StyleSheet } from "react-native";
 import { todoItems } from "../data/TodoMock";
 
 export default function Index() {
-  const [isCreating, setIsCreating] = useState(false);
+  const router = useRouter();
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <Button
-        title="Créer une Todo"
-        onPress={() => setIsCreating(!isCreating)}
+      <Stack.Screen
+        options={{
+          headerTitle: "TODO-list",
+          headerRight: () => (
+            <Button title="Créer" onPress={() => router.push("/edit")} />
+          ),
+        }}
       />
-      {isCreating ? (
-        <TodoEdit />
-      ) : (
-        todoItems.map((todo) => (
-          <TodoItem key={todo.id} title={todo.title} done={todo.done} />
-        ))
-      )}
+      {todoItems.map((todo) => (
+        <TodoItem
+          key={todo.id}
+          title={todo.title}
+          done={todo.done}
+          onPress={() =>
+            router.push({
+              pathname: "/edit",
+              params: { title: todo.title, done: todo.done.toString() },
+            })
+          }
+        />
+      ))}
     </ScrollView>
   );
 }

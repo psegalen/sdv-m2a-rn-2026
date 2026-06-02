@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: "#AFA",
     borderRadius: 8,
-    minWidth: 180,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

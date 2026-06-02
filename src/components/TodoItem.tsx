@@ -10,6 +10,7 @@ import { Card } from "react-native-paper";
 interface TodoItemProps {
   done: boolean;
   title: string;
+  onPress: () => void;
 }
 
 export default function TodoItem(props: TodoItemProps) {
@@ -22,7 +23,7 @@ export default function TodoItem(props: TodoItemProps) {
     containerStyle.push(styles.containerDone);
   }
   return (
-    <Card style={containerStyle}>
+    <Card style={containerStyle} onPress={props.onPress}>
       <Text style={paragraphStyle}>{props.title}</Text>
       <Text>{statusText}</Text>
     </Card>

@@ -1,16 +1,28 @@
+import { TodoDataItem } from "@/data/TodoMock";
 import { StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import Button from "./Button";
 
-const TodoEdit = () => {
+interface TodoEditProps {
+  creation: boolean;
+  todo?: TodoDataItem;
+}
+
+const TodoEdit = ({ creation, todo }: TodoEditProps) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Nouvelle Todo</Text>
-      <TextInput style={styles.input} placeholder="Tâche à faire" />
+      <Text style={styles.title}>
+        {creation ? "Nouvelle Todo" : "Modifier la Todo"}
+      </Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Tâche à faire"
+        value={todo ? todo.title : ""}
+      />
       <View style={styles.switchContainer}>
-        <Switch />
+        <Switch value={todo ? todo.done : false} />
         <Text>Fait ?</Text>
       </View>
-      <Button title="Créer" />
+      <Button title={creation ? "Créer" : "Modifier"} />
     </View>
   );
 };
