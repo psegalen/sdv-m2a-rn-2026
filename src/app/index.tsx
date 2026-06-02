@@ -1,50 +1,5 @@
-import Button from "@/components/Button";
-import TodoItem from "@/components/TodoItem";
-import { Stack, useRouter } from "expo-router";
-import { Platform, ScrollView, StyleSheet } from "react-native";
-import { todoItems } from "../data/TodoMock";
+import { Redirect } from "expo-router";
 
-export default function Index() {
-  const router = useRouter();
-  return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-    >
-      <Stack.Screen
-        options={{
-          headerTitle: "TODO-list",
-          headerRight: () => (
-            <Button title="Créer" onPress={() => router.push("/edit")} />
-          ),
-        }}
-      />
-      {todoItems.map((todo) => (
-        <TodoItem
-          key={todo.id}
-          title={todo.title}
-          done={todo.done}
-          onPress={() =>
-            router.push({
-              pathname: "/edit",
-              params: { title: todo.title, done: todo.done.toString() },
-            })
-          }
-        />
-      ))}
-    </ScrollView>
-  );
-}
+const Index = () => <Redirect href="/(tabs)/todo" />;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 16,
-    gap: 16,
-    paddingBottom: Platform.select({ ios: undefined, android: 64 }),
-  },
-});
+export default Index;

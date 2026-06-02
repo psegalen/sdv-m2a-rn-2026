@@ -1,3 +1,4 @@
+import globalStyles from "@/style/globalStyles";
 import { Pressable, StyleSheet, Text } from "react-native";
 
 interface ButtonProps {
@@ -8,7 +9,7 @@ interface ButtonProps {
 const Button = ({ title, onPress }: ButtonProps) => {
   return (
     <Pressable onPress={onPress} style={styles.buttonContainer}>
-      <Text style={styles.buttonLabel}>{title}</Text>
+      <Text style={globalStyles.title}>{title}</Text>
     </Pressable>
   );
 };
@@ -27,11 +28,6 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
 
     elevation: 2,
-  },
-  buttonLabel: {
-    fontWeight: "bold",
-    fontSize: 16,
-    textAlign: "center",
   },
 });
 

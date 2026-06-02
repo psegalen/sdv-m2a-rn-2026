@@ -1,8 +1,10 @@
+import globalStyles from "@/style/globalStyles";
 import {
   StyleProp,
   StyleSheet,
   Text,
   TextStyle,
+  View,
   ViewStyle,
 } from "react-native";
 import { Card } from "react-native-paper";
@@ -16,7 +18,7 @@ interface TodoItemProps {
 export default function TodoItem(props: TodoItemProps) {
   const done = props.done;
   const statusText = done ? "Fait" : "A faire";
-  const paragraphStyle: StyleProp<TextStyle>[] = [styles.paragraph];
+  const paragraphStyle: StyleProp<TextStyle>[] = [globalStyles.title];
   const containerStyle: StyleProp<ViewStyle>[] = [styles.container];
   if (done) {
     paragraphStyle.push(styles.paragraphDone);
@@ -24,8 +26,10 @@ export default function TodoItem(props: TodoItemProps) {
   }
   return (
     <Card style={containerStyle} onPress={props.onPress}>
-      <Text style={paragraphStyle}>{props.title}</Text>
-      <Text>{statusText}</Text>
+      <View style={styles.itemRoot}>
+        <Text style={paragraphStyle}>{props.title}</Text>
+        <Text>{statusText}</Text>
+      </View>
     </Card>
   );
 }
@@ -38,13 +42,11 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#FFF",
   },
+  itemRoot: {
+    gap: 16,
+  },
   containerDone: {
     opacity: 0.8,
-  },
-  paragraph: {
-    marginBottom: 16,
-    fontSize: 16,
-    fontWeight: "bold",
   },
   paragraphDone: {
     textDecorationLine: "line-through",

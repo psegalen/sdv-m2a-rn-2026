@@ -1,4 +1,5 @@
 import { TodoDataItem } from "@/data/TodoMock";
+import globalStyles from "@/style/globalStyles";
 import { StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import Button from "./Button";
 
@@ -10,7 +11,7 @@ interface TodoEditProps {
 const TodoEdit = ({ creation, todo }: TodoEditProps) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
+      <Text style={globalStyles.title}>
         {creation ? "Nouvelle Todo" : "Modifier la Todo"}
       </Text>
       <TextInput
@@ -33,11 +34,6 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 24,
     gap: 16,
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 16,
-    textAlign: "center",
   },
   input: {
     borderColor: "#AAA",
