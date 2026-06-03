@@ -51,3 +51,41 @@ export const getTodoList = async (): Promise<TodoDataItem[]> => {
     return [];
   }
 };
+
+export const createTodoOnServer = async (
+  todo: TodoDataItem,
+): Promise<boolean> => {
+  try {
+    const response = await fetch("https://dummyjson.com/todos/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        todo: todo.title,
+        completed: todo.done,
+        userId: 5,
+      }),
+    });
+    console.log("Created TODO on server", response);
+    return response.ok;
+  } catch (e) {
+    console.error("Creating a Todo failed", e);
+    return false;
+  }
+};
+
+export const updateTodoOnServer = async (
+  newTodo: TodoDataItem,
+): Promise<boolean> => {
+  try {
+    const response = await fetch(`https://dummyjson.com/todos/${newTodo.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newTodo),
+    });
+    console.log("Updated TODO on server", response);
+    return response.ok;
+  } catch (e) {
+    console.error("Updating a Todo failed", e);
+    return false;
+  }
+};

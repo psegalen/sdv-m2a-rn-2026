@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   createContext,
   FC,
@@ -6,23 +5,21 @@ import {
   useEffect,
   useState,
 } from "react";
-import { getTodoList } from "./TodoApi";
+import { createTodoOnServer, getTodoList, updateTodoOnServer } from "./TodoApi";
 import { TodoDataItem } from "./TodoMock";
-
-const TODO_LIST_STORAGE_KEY = "TODO_LIST";
 
 interface TodoContextProps {
   todoList: TodoDataItem[];
   isLoading: boolean;
-  createTodo: (newTodoTitle: string) => void;
-  updateTodo: (updatedTodo: TodoDataItem) => void;
+  createTodo: (newTodoTitle: string) => Promise<void>;
+  updateTodo: (updatedTodo: TodoDataItem) => Promise<void>;
 }
 
 export const TodoContext = createContext<TodoContextProps>({
   todoList: [],
   isLoading: false,
-  createTodo: () => {},
-  updateTodo: () => {},
+  createTodo: () => Promise.resolve(),
+  updateTodo: () => Promise.resolve(),
 });
 
 export const TodoProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -35,36 +32,24 @@ export const TodoProvider: FC<PropsWithChildren> = ({ children }) => {
       const apiList = await getTodoList();
       setTodoList(apiList);
       setIsLoading(false);
-      /* const storageValue = await AsyncStorage.getItem(TODO_LIST_STORAGE_KEY);
-      if (storageValue === null) {
-        setTodoList(todoItems);
-      } else {
-        setTodoList(JSON.parse(storageValue));
-      } */
     })();
   }, []);
 
-  const persistState = (list: TodoDataItem[]): TodoDataItem[] => {
-    AsyncStorage.setItem(TODO_LIST_STORAGE_KEY, JSON.stringify(list));
-    return list;
+  const createTodo = async (newTodoTitle: string) => {
+    const newTodo: TodoDataItem = {
+      id: (Math.max(...todoList.map((i) => parseInt(i.id))) + 1).toString(),
+      title: newTodoTitle,
+      done: false,
+    };
+    await createTodoOnServer(newTodo);
+    setTodoList(todoList.concat(newTodo));
   };
-
-  const createTodo = (newTodoTitle: string) =>
+  const updateTodo = async (updatedTodo: TodoDataItem) => {
+    await updateTodoOnServer(updatedTodo);
     setTodoList(
-      persistState(
-        todoList.concat({
-          id: (Math.max(...todoList.map((i) => parseInt(i.id))) + 1).toString(),
-          title: newTodoTitle,
-          done: false,
-        }),
-      ),
+      todoList.map((ti) => (ti.id === updatedTodo.id ? updatedTodo : ti)),
     );
-  const updateTodo = (updatedTodo: TodoDataItem) =>
-    setTodoList(
-      persistState(
-        todoList.map((ti) => (ti.id === updatedTodo.id ? updatedTodo : ti)),
-      ),
-    );
+  };
 
   return (
     <TodoContext.Provider
