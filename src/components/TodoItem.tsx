@@ -18,7 +18,10 @@ interface TodoItemProps {
 export default function TodoItem(props: TodoItemProps) {
   const done = props.done;
   const statusText = done ? "Fait" : "A faire";
-  const paragraphStyle: StyleProp<TextStyle>[] = [globalStyles.title];
+  const paragraphStyle: StyleProp<TextStyle>[] = [
+    globalStyles.title,
+    { textAlign: "left" },
+  ];
   const containerStyle: StyleProp<ViewStyle>[] = [styles.container];
   if (done) {
     paragraphStyle.push(styles.paragraphDone);

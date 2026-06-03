@@ -3,11 +3,17 @@ import TodoItem from "@/components/TodoItem";
 import { TodoContext } from "@/data/TodoContext";
 import { Stack, useRouter } from "expo-router";
 import { useContext } from "react";
-import { Platform, ScrollView, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 
 export default function Index() {
   const router = useRouter();
-  const { todoList } = useContext(TodoContext);
+  const { todoList, isLoading } = useContext(TodoContext);
   return (
     <ScrollView
       style={styles.container}
@@ -24,19 +30,25 @@ export default function Index() {
           ),
         }}
       />
-      {todoList.map((todo) => (
-        <TodoItem
-          key={todo.id}
-          title={todo.title}
-          done={todo.done}
-          onPress={() =>
-            router.push({
-              pathname: "/(tabs)/todo/edit",
-              params: { todoId: todo.id },
-            })
-          }
-        />
-      ))}
+      {isLoading ? (
+        <View>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        todoList.map((todo) => (
+          <TodoItem
+            key={todo.id}
+            title={todo.title}
+            done={todo.done}
+            onPress={() =>
+              router.push({
+                pathname: "/(tabs)/todo/edit",
+                params: { todoId: todo.id },
+              })
+            }
+          />
+        ))
+      )}
     </ScrollView>
   );
 }
@@ -44,6 +56,11 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  spinnerContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   contentContainer: {
     alignItems: "center",
