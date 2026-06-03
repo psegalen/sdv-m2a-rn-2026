@@ -89,3 +89,16 @@ export const updateTodoOnServer = async (
     return false;
   }
 };
+
+export const deleteTodoOnServer = async (todoId: string): Promise<boolean> => {
+  try {
+    const response = await fetch(`https://dummyjson.com/todos/${todoId}`, {
+      method: "DELETE",
+    });
+    console.log("Deleted TODO on server", response);
+    return response.ok;
+  } catch (e) {
+    console.error("Updating a Todo failed", e);
+    return false;
+  }
+};

@@ -2,7 +2,7 @@ import { TodoContext } from "@/data/TodoContext";
 import globalStyles from "@/style/globalStyles";
 import { useRouter } from "expo-router";
 import { useContext, useState } from "react";
-import { StyleSheet, Switch, Text, TextInput, View } from "react-native";
+import { Alert, StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import Button from "./Button";
 
 interface TodoEditProps {
@@ -12,7 +12,8 @@ interface TodoEditProps {
 
 const TodoEdit = ({ creation, todoId }: TodoEditProps) => {
   const router = useRouter();
-  const { todoList, createTodo, updateTodo } = useContext(TodoContext);
+  const { todoList, createTodo, updateTodo, deleteTodo } =
+    useContext(TodoContext);
   const todo = creation ? null : todoList.find((item) => item.id === todoId);
   const [newTitle, setNewTitle] = useState(todo ? todo.title : "");
   const [newDone, setNewDone] = useState(todo ? todo.done : false);
@@ -23,6 +24,18 @@ const TodoEdit = ({ creation, todoId }: TodoEditProps) => {
       updateTodo({ ...todo!, title: newTitle, done: newDone });
     }
     router.back();
+  };
+  const onDelete = () => {
+    Alert.alert("Supprimer", "Voulez-vous vraiment supprimer cette tâche ?", [
+      { text: "Non" },
+      {
+        text: "Oui",
+        onPress: () => {
+          deleteTodo(todoId!);
+          router.back();
+        },
+      },
+    ]);
   };
   return (
     <View style={styles.container}>
@@ -43,6 +56,9 @@ const TodoEdit = ({ creation, todoId }: TodoEditProps) => {
         <Text>Fait ?</Text>
       </View>
       <Button title={creation ? "Créer" : "Modifier"} onPress={onPress} />
+      {!creation ? (
+        <Button title="Supprimer" onPress={onDelete} color="#E66" />
+      ) : undefined}
     </View>
   );
 };

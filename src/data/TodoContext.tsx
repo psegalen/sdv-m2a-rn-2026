@@ -5,7 +5,12 @@ import {
   useEffect,
   useState,
 } from "react";
-import { createTodoOnServer, getTodoList, updateTodoOnServer } from "./TodoApi";
+import {
+  createTodoOnServer,
+  deleteTodoOnServer,
+  getTodoList,
+  updateTodoOnServer,
+} from "./TodoApi";
 import { TodoDataItem } from "./TodoMock";
 
 interface TodoContextProps {
@@ -13,6 +18,7 @@ interface TodoContextProps {
   isLoading: boolean;
   createTodo: (newTodoTitle: string) => Promise<void>;
   updateTodo: (updatedTodo: TodoDataItem) => Promise<void>;
+  deleteTodo: (todoId: string) => Promise<void>;
 }
 
 export const TodoContext = createContext<TodoContextProps>({
@@ -20,6 +26,7 @@ export const TodoContext = createContext<TodoContextProps>({
   isLoading: false,
   createTodo: () => Promise.resolve(),
   updateTodo: () => Promise.resolve(),
+  deleteTodo: () => Promise.resolve(),
 });
 
 export const TodoProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -50,10 +57,14 @@ export const TodoProvider: FC<PropsWithChildren> = ({ children }) => {
       todoList.map((ti) => (ti.id === updatedTodo.id ? updatedTodo : ti)),
     );
   };
+  const deleteTodo = async (todoId: string) => {
+    await deleteTodoOnServer(todoId);
+    setTodoList(todoList.filter((ti) => ti.id !== todoId));
+  };
 
   return (
     <TodoContext.Provider
-      value={{ todoList, isLoading, createTodo, updateTodo }}
+      value={{ todoList, isLoading, createTodo, updateTodo, deleteTodo }}
     >
       {children}
     </TodoContext.Provider>
